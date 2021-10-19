@@ -67,22 +67,29 @@ const apiResponse = [
 ]
 
 const CardWrapper = styled.div`
+  position: relative;
   width: 250px;
-  //   height: 350px;
+  height: 350px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   ${navBarShadow}
   ${navBarStyle}
+  background-color : ${({ theme }) => theme.elements}
 `
 
 const GermanyFlag = styled(GermanySvg)`
+  position: absolute;
+  top: 0;
   width: 250px;
-  height: 100%;
+  max-height: 150px;
   clip-path: fill-box;
 `
 
 const DescriptionWrapper = styled.div`
+  position: absolute;
+  bottom: 0;
+  height : 50%;
   padding: 0px 20px;
   & h2 {
     margin: 25px 0px;

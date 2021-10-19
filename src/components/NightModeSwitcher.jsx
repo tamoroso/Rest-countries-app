@@ -10,6 +10,7 @@ library.add(farMoon, fasMoon)
 
 const Button = styled.button`
   background: transparent;
+  color : ${({ theme }) => theme.text};
   padding: 5px 10px;
   display : flex;
   align-items : center;
@@ -20,17 +21,18 @@ const Button = styled.button`
   border-radius : 20px;
   transition : ease-in-out 200ms;
   &:hover{
-      background : black;
-      color : white;
+      background : ${({theme})=>theme.body};
+      color : ${({theme})=>theme.text};
   }
 `
+
 
 
 export default class NightMode extends Component {
   render() {
     return (
-      <Button>
-        <FontAwesomeIcon icon={["far", "moon"]} />
+      <Button onClick={this.props.themeToggler} theme={this.props.theme}>
+          <FontAwesomeIcon icon={["far", "moon"]} />       
         <span> Dark Mode</span>
       </Button>
     )
