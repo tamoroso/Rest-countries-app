@@ -6,6 +6,8 @@ import NavBar from "../components/NavBar"
 import { ThemeProvider } from "styled-components"
 import { lightTheme, darkTheme } from "../utils/style/Themes"
 import { GlobalStyle } from "../utils/style/GlobalStyle"
+const API_URL = "https://restcountries.com/v3.1/all"
+
 
 const StyledHome = styled.div`
   min-height: 100vh;
@@ -17,10 +19,14 @@ const CountryCardsWrapper = styled.section`
 `
 
 export default class Home extends Component {
-
   constructor(props) {
     super(props)
-    this.state = { theme: 'light' }
+    this.state = {
+      theme: "light",
+      error: null,
+      isLoaded: false,
+      items: [],
+    }
   }
 
   themeToggler = () => {
@@ -32,17 +38,37 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    let theme = JSON.parse(localStorage.getItem('theme'))
+    let theme = JSON.parse(localStorage.getItem("theme"))
     if (theme) {
-      this.setState({theme})
+      this.setState({ theme: theme })
     }
+
+    //fetch API data
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          const countries = result
+          console.log(countries)
+          this.setState({
+            isLoaded: true,
+            items: countries,
+          })
+          localStorage.setItem('countries', JSON.stringify(countries))
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error,
+          })
+        }
+      )
   }
 
   componentDidUpdate(prevProps, prevStates) {
     const json = JSON.stringify(this.state.theme)
-    localStorage.setItem('theme', json)
+    localStorage.setItem("theme", json)
   }
-
 
   render() {
     return (
