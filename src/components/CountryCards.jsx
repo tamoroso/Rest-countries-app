@@ -1,74 +1,12 @@
 import { Component } from "react"
 import styled from "styled-components"
-import { ReactComponent as GermanySvg } from "../assets/Flag_of_Germany.svg"
 import { navBarStyle, navBarShadow } from "../utils/style/atoms"
-import { beautyfiedNumber } from "../utils/functions/beautytiedNumber"
+import { beautyfiedNumber } from "../utils/functions/beautyfiedNumber"
 
-const apiResponse = [
-  {
-    name: "Germany",
-    topLevelDomain: [".de"],
-    alpha2Code: "DE",
-    alpha3Code: "DEU",
-    callingCodes: ["49"],
-    capital: "Berlin",
-    altSpellings: [
-      "DE",
-      "Federal Republic of Germany",
-      "Bundesrepublik Deutschland",
-    ],
-    region: "Europe",
-    subregion: "Western Europe",
-    population: 81770900,
-    latlng: [51, 9],
-    demonym: "German",
-    area: 357114,
-    gini: 28.3,
-    timezones: ["UTC+01:00"],
-    borders: ["AUT", "BEL", "CZE", "DNK", "FRA", "LUX", "NLD", "POL", "CHE"],
-    nativeName: "Deutschland",
-    numericCode: "276",
-    currencies: [
-      {
-        code: "EUR",
-        name: "Euro",
-        symbol: "€",
-      },
-    ],
-    languages: [
-      {
-        iso639_1: "de",
-        iso639_2: "deu",
-        name: "German",
-        nativeName: "Deutsch",
-      },
-    ],
-    translations: {
-      br: "Alemanha",
-      de: "Deutschland",
-      es: "Alemania",
-      fa: "آلمان",
-      fr: "Allemagne",
-      hr: "Njemačka",
-      it: "Germania",
-      ja: "ドイツ",
-      nl: "Duitsland",
-      pt: "Alemanha",
-    },
-    flag: "https://restcountries.eu/data/deu.svg",
-    regionalBlocs: [
-      {
-        acronym: "EU",
-        name: "European Union",
-      },
-    ],
-    cioc: "GER",
-  },
-]
 
 const CardWrapper = styled.div`
   position: relative;
-  width: 250px;
+ min-width: 260px;
   height: 350px;
   display: flex;
   flex-direction: column;
@@ -78,26 +16,27 @@ const CardWrapper = styled.div`
   background-color : ${({ theme }) => theme.elements}
 `
 
-const GermanyFlag = styled(GermanySvg)`
+const Flag = styled.img`
   position: absolute;
   top: 0;
-  width: 250px;
-  max-height: 150px;
-  clip-path: fill-box;
+  width: 260px;
+  height: 150px;
+  // clip-path: fill-box;
 `
 
 const DescriptionWrapper = styled.div`
   position: absolute;
   bottom: 0;
   height : 50%;
-  padding: 0px 20px;
+  padding: 0px 25px;
   & h2 {
-    margin: 25px 0px;
+    margin: 10px 0px;
   }
 `
 
 const DescriptionDetailsWrapper = styled.div`
   padding-bottom: 25px;
+  padding-top : 10px;
 `
 
 const DescriptionDetails = styled.li`
@@ -107,33 +46,39 @@ const DescriptionDetails = styled.li`
   }
   & h3 span {
     font-weight: 300;
+    font-size : 0.875rem;
   }
 `
 
 export default class CountryCards extends Component {
   render() {
+    const countryFlag = this.props.flag
+    const countryName = this.props.name
+    const countryPopulation = this.props.population
+    const countryRegion = this.props.region
+    const countryCapital = this.props.capital
     return (
       <CardWrapper>
         <div>
-          <GermanyFlag />
+          <Flag src={countryFlag} alt={ `${countryName} flag`}/>
         </div>
         <DescriptionWrapper>
-          <h2>{apiResponse[0].name}</h2>
+          <h2>{countryName}</h2>
           <DescriptionDetailsWrapper>
             <DescriptionDetails>
               <h3>
                 Population :{" "}
-                <span>{beautyfiedNumber(apiResponse[0].population)}</span>
+                <span>{beautyfiedNumber(countryPopulation)}</span>
               </h3>
             </DescriptionDetails>
             <DescriptionDetails>
               <h3>
-                Region : <span>{apiResponse[0].region}</span>
+                Region : <span>{countryRegion}</span>
               </h3>
             </DescriptionDetails>
             <DescriptionDetails>
               <h3>
-                Capital : <span>{apiResponse[0].capital}</span>
+                Capital : <span>{countryCapital}</span>
               </h3>
             </DescriptionDetails>
           </DescriptionDetailsWrapper>

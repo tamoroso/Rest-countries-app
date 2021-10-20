@@ -11,7 +11,7 @@ const dropDownWidth = css`
   width: 200px;
 `
 
-const options = ["Africa", "America", "Asia", "Europe", "Oceania"]
+const options = ["Africa", "Americas", "Asia", "Europe", "Oceania"]
 
 const DropDownWrapper = styled.div`
   position: relative;
@@ -52,11 +52,19 @@ const DropDownButton = styled.button`
 export default class DropDownFilter extends Component {
   constructor(props) {
     super(props)
-    this.state = { isOpen: false }
+    this.state = {
+      isOpen: false,
+      filter: '',
+    }
   }
 
   toggleDropDown = (e) => {
     this.setState((prevState) => ({ isOpen: !prevState.isOpen }))
+  }
+
+  addFilter = (country) => {
+    this.setState({ filter: country })
+    console.log(this.state.filter)
   }
 
   render() {
@@ -70,7 +78,7 @@ export default class DropDownFilter extends Component {
         {isOpen ? (
           <DropDownContent>
             {options.map((country) => (
-              <DropDownItems key={options.indexOf(country)}>
+              <DropDownItems key={options.indexOf(country)} onClick={(e) => this.addFilter(country)}>
                 {country}
               </DropDownItems>
             ))}

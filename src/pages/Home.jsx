@@ -8,7 +8,6 @@ import { lightTheme, darkTheme } from "../utils/style/Themes"
 import { GlobalStyle } from "../utils/style/GlobalStyle"
 const API_URL = "https://restcountries.com/v3.1/all"
 
-
 const StyledHome = styled.div`
   min-height: 100vh;
   background: ${({ theme }) => theme.body};
@@ -16,6 +15,10 @@ const StyledHome = styled.div`
 
 const CountryCardsWrapper = styled.section`
   padding: 0px 80px;
+  display : flex;
+  flex-wrap : wrap;
+  column-gap : 80px;
+  row-gap : 80px
 `
 
 export default class Home extends Component {
@@ -45,16 +48,21 @@ export default class Home extends Component {
 
     //fetch API data
     fetch(API_URL)
-      .then(res => res.json())
+      .then((res) => res.json())
       .then(
         (result) => {
+          console.log(result)
           const countries = result
-          console.log(countries)
+          console.log(
+            countries.map((country) => {
+              return country.flags.png
+            })
+          )
           this.setState({
             isLoaded: true,
             items: countries,
           })
-          localStorage.setItem('countries', JSON.stringify(countries))
+          localStorage.setItem("countries", JSON.stringify(countries))
         },
         (error) => {
           this.setState({
@@ -71,6 +79,7 @@ export default class Home extends Component {
   }
 
   render() {
+    const countries = this.state.items
     return (
       <ThemeProvider
         theme={this.state.theme === "light" ? lightTheme : darkTheme}
@@ -81,7 +90,19 @@ export default class Home extends Component {
             <Banner themeToggler={this.themeToggler} theme={this.state.theme} />
             <NavBar theme={this.state.theme} />
             <CountryCardsWrapper>
-              <CountryCards theme={this.state.theme} />
+              {countries.map((country) => {
+                return (
+                  <CountryCards
+                    name={country.name.common}
+                    flag={country.flags.png}
+                    region={country.region}
+                    capital={country.capital}
+                    population={country.population}
+                    key={country.cca3}
+                  />
+                )
+              })}
+              {/* <CountryCards theme={this.state.theme} /> */}
             </CountryCardsWrapper>
           </StyledHome>
         </>

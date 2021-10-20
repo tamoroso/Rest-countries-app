@@ -9,7 +9,7 @@ export function beautyfiedNumber(bigNumber) {
 
     for (let i = bigNumberArray.length; i >= 0; i--){
         beautyfiedBigNumber.unshift(bigNumberArray[i])
-        if (counter === 3) {
+        if (counter === 3 && i!==0) {
             counter = 0
             beautyfiedBigNumber.unshift(separator)
         }
