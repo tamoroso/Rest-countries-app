@@ -54,17 +54,11 @@ export default class DropDownFilter extends Component {
     super(props)
     this.state = {
       isOpen: false,
-      filter: '',
     }
   }
 
   toggleDropDown = (e) => {
     this.setState((prevState) => ({ isOpen: !prevState.isOpen }))
-  }
-
-  addFilter = (country) => {
-    this.setState({ filter: country })
-    console.log(this.state.filter)
   }
 
   render() {
@@ -78,8 +72,11 @@ export default class DropDownFilter extends Component {
         {isOpen ? (
           <DropDownContent>
             {options.map((country) => (
-              <DropDownItems key={options.indexOf(country)} onClick={(e) => this.addFilter(country)}>
-                {country}
+              <DropDownItems
+                key={options.indexOf(country)}
+                onClick={this.props.handleClick.bind(this, country)}
+              >
+                {country} {this.props.filter}
               </DropDownItems>
             ))}
           </DropDownContent>

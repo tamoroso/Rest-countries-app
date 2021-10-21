@@ -40,11 +40,16 @@ export default class NavBar extends Component {
   render() {
     return (
       <NavBarWrapper>
-        <SearchWrapper >
-          <input theme={this.props.theme} type="text" placeholder="Search for a country..."></input>
+        <SearchWrapper>
+          <input
+            theme={this.props.theme}
+            type="text"
+            placeholder="Search for a country..."
+            onChange={this.props.handleChange}
+          ></input>
           <SearchIcon icon={"search"} />
         </SearchWrapper>
-        <DropDownFilter theme={this.props.theme} />
+        <DropDownFilter theme={this.props.theme} handleClick={ this.props.handleClick}/>
       </NavBarWrapper>
     )
   }

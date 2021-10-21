@@ -6,6 +6,7 @@ import NavBar from "../components/NavBar"
 import { ThemeProvider } from "styled-components"
 import { lightTheme, darkTheme } from "../utils/style/Themes"
 import { GlobalStyle } from "../utils/style/GlobalStyle"
+import { Link } from "react-router-dom"
 const API_URL = "https://restcountries.com/v3.1/all"
 
 const StyledHome = styled.div`
@@ -15,10 +16,10 @@ const StyledHome = styled.div`
 
 const CountryCardsWrapper = styled.section`
   padding: 0px 80px;
-  display : flex;
-  flex-wrap : wrap;
-  column-gap : 80px;
-  row-gap : 80px
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 80px;
+  row-gap: 80px;
 `
 
 export default class Home extends Component {
@@ -29,6 +30,7 @@ export default class Home extends Component {
       error: null,
       isLoaded: false,
       items: [],
+      filterItems: [],
     }
   }
 
@@ -51,16 +53,11 @@ export default class Home extends Component {
       .then((res) => res.json())
       .then(
         (result) => {
-          console.log(result)
           const countries = result
-          console.log(
-            countries.map((country) => {
-              return country.flags.png
-            })
-          )
           this.setState({
             isLoaded: true,
             items: countries,
+            filterItems: countries,
           })
           localStorage.setItem("countries", JSON.stringify(countries))
         },
@@ -73,13 +70,27 @@ export default class Home extends Component {
       )
   }
 
+  handleClick = (region) => {
+    let filterItems = []
+    filterItems = this.state.items.filter((item) => item.region === region)
+    this.setState({ filterItems })
+  }
+
+  handleChange = (e) => {
+    let searchItems = []
+    searchItems = this.state.items.filter((item) =>
+      item.name.common.toUpperCase().includes(e.target.value.toUpperCase())
+    )
+    this.setState({ filterItems: searchItems })
+  }
+
   componentDidUpdate(prevProps, prevStates) {
     const json = JSON.stringify(this.state.theme)
     localStorage.setItem("theme", json)
   }
 
   render() {
-    const countries = this.state.items
+    const countries = this.state.filterItems
     return (
       <ThemeProvider
         theme={this.state.theme === "light" ? lightTheme : darkTheme}
@@ -88,21 +99,26 @@ export default class Home extends Component {
           <GlobalStyle />
           <StyledHome>
             <Banner themeToggler={this.themeToggler} theme={this.state.theme} />
-            <NavBar theme={this.state.theme} />
+            <NavBar
+              theme={this.state.theme}
+              handleClick={this.handleClick}
+              handleChange={this.handleChange}
+            />
             <CountryCardsWrapper>
               {countries.map((country) => {
                 return (
-                  <CountryCards
-                    name={country.name.common}
-                    flag={country.flags.png}
-                    region={country.region}
-                    capital={country.capital}
-                    population={country.population}
-                    key={country.cca3}
-                  />
+                  <Link key={country.cca3} to={`/country/${country.name.common}`}>
+                    <CountryCards
+                      name={country.name.common}
+                      flag={country.flags.png}
+                      region={country.region}
+                      capital={country.capital}
+                      population={country.population}
+                      key={country.cca3}
+                    />
+                  </Link>
                 )
               })}
-              {/* <CountryCards theme={this.state.theme} /> */}
             </CountryCardsWrapper>
           </StyledHome>
         </>
