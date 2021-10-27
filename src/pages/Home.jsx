@@ -6,8 +6,7 @@ import NavBar from "../components/NavBar"
 import { ThemeProvider } from "styled-components"
 import { lightTheme, darkTheme } from "../utils/style/Themes"
 import { GlobalStyle } from "../utils/style/GlobalStyle"
-import { Link } from "react-router-dom"
-const API_URL = "https://restcountries.com/v3.1/all"
+import { ApiContext } from "../context/ApiContext"
 
 const StyledHome = styled.div`
   min-height: 100vh;
@@ -23,14 +22,11 @@ const CountryCardsWrapper = styled.section`
 `
 
 export default class Home extends Component {
+  static contextType = ApiContext
   constructor(props) {
     super(props)
     this.state = {
       theme: "light",
-      error: null,
-      isLoaded: false,
-      items: [],
-      filterItems: [],
     }
   }
 
@@ -47,41 +43,6 @@ export default class Home extends Component {
     if (theme) {
       this.setState({ theme: theme })
     }
-
-    //fetch API data
-    fetch(API_URL)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          const countries = result
-          this.setState({
-            isLoaded: true,
-            items: countries,
-            filterItems: countries,
-          })
-          localStorage.setItem("countries", JSON.stringify(countries))
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error,
-          })
-        }
-      )
-  }
-
-  handleClick = (region) => {
-    let filterItems = []
-    filterItems = this.state.items.filter((item) => item.region === region)
-    this.setState({ filterItems })
-  }
-
-  handleChange = (e) => {
-    let searchItems = []
-    searchItems = this.state.items.filter((item) =>
-      item.name.common.toUpperCase().includes(e.target.value.toUpperCase())
-    )
-    this.setState({ filterItems: searchItems })
   }
 
   componentDidUpdate(prevProps, prevStates) {
@@ -90,7 +51,9 @@ export default class Home extends Component {
   }
 
   render() {
-    const countries = this.state.filterItems
+    const { filterItems, handleChange, handleClick, setCurrentCountry } =
+      this.context
+    console.log(this.context)
     return (
       <ThemeProvider
         theme={this.state.theme === "light" ? lightTheme : darkTheme}
@@ -101,22 +64,22 @@ export default class Home extends Component {
             <Banner themeToggler={this.themeToggler} theme={this.state.theme} />
             <NavBar
               theme={this.state.theme}
-              handleClick={this.handleClick}
-              handleChange={this.handleChange}
+              handleClick={handleClick}
+              handleChange={handleChange}
             />
             <CountryCardsWrapper>
-              {countries.map((country) => {
+              {filterItems.map((country) => {
                 return (
-                  <Link key={country.cca3} to={`/country/${country.name.common}`}>
-                    <CountryCards
-                      name={country.name.common}
-                      flag={country.flags.png}
-                      region={country.region}
-                      capital={country.capital}
-                      population={country.population}
-                      key={country.cca3}
-                    />
-                  </Link>
+                  <CountryCards
+                    name={country.name.common}
+                    flag={country.flags.png}
+                    region={country.region}
+                    capital={country.capital}
+                    population={country.population}
+                    key={country.cca3}
+                    countryCode={country.cca3}
+                    setCurrentCountry={setCurrentCountry}
+                  />
                 )
               })}
             </CountryCardsWrapper>
