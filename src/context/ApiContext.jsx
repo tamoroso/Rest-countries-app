@@ -7,10 +7,18 @@ export default class ApiContextProvider extends Component {
   state = {
     error: null,
     isLoaded: false,
-    items: [],
-    filterItems: [],
-    currentCountry: [],
-    currentBorders: [],
+    items:
+      JSON.parse(localStorage.getItem("countries")) === null
+        ? []
+        : JSON.parse(localStorage.getItem("countries")),
+    filterItems:
+      JSON.parse(localStorage.getItem("countries")) === null
+        ? []
+        : JSON.parse(localStorage.getItem("countries")),
+    currentCountry:
+      JSON.parse(localStorage.getItem("current")) === null
+        ? []
+        : JSON.parse(localStorage.getItem("current")),
   }
 
   componentDidMount() {
@@ -63,18 +71,12 @@ export default class ApiContextProvider extends Component {
   }
 
   setCurrentCountry = (country) => {
-    this.setState({ currentCountry : country })
+    localStorage.setItem("current", JSON.stringify(country))
+    this.setState({ currentCountry: country, filterItems: this.state.items })
   }
 
   render() {
-    const {
-      filterItems,
-      isLoaded,
-      error,
-      items,
-      currentCountry,
-      currentBorders,
-    } = this.state
+    const { filterItems, isLoaded, error, items, currentCountry } = this.state
     const { handleClick, handleChange, setCurrentCountry } = this
     return (
       <ApiContext.Provider
@@ -83,7 +85,6 @@ export default class ApiContextProvider extends Component {
           isLoaded,
           error,
           items,
-          currentBorders,
           currentCountry,
           handleChange,
           handleClick,

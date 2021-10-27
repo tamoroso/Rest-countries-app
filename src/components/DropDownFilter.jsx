@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons"
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { navBarStyle, navBarShadow } from "../utils/style/atoms"
+import { device } from "../utils/style/device"
 
 library.add(faAngleDown)
 
@@ -17,6 +18,9 @@ const DropDownWrapper = styled.div`
   position: relative;
   display: inline-block;
   ${dropDownWidth};
+  @media ${device.tablet}{
+    margin-bottom : 30px;
+  }
 `
 const DropDownContent = styled.div`
   position: absolute;

@@ -11,11 +11,16 @@ import { buttonStyle } from "../utils/style/atoms"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons"
+import { device } from "../utils/style/device"
 
 library.add(faArrowLeft)
 
 const CountrySection = styled.section`
   padding: 0px 80px;
+
+  @media ${device.tablet} {
+    padding: 0px 20px;
+  }
 `
 
 const ReturnLink = styled(Link)`
@@ -30,16 +35,25 @@ const ReturnLink = styled(Link)`
 `
 
 const ArrowIcon = styled(FontAwesomeIcon)`
-  padding-right : 10px;
+  padding-right: 10px;
 `
 
 const CountryWrapper = styled.div`
   display: flex;
+
+  @media ${device.tablet} {
+    flex-direction: column;
+  }
 `
 
 const Flag = styled.img`
   width: 50%;
   heigth: auto;
+
+  @media ${device.tablet} {
+    width: 100%;
+    height: auto;
+  }
 `
 
 const DetailsWrapper = styled.div`
@@ -54,6 +68,14 @@ const DetailsWrapper = styled.div`
       padding: 5px 0px;
     }
   }
+
+  @media ${device.tablet} {
+    flex-direction: column;
+
+    & ul {
+      padding: 0px 0px 30px 0px;
+    }
+  }
 `
 
 const CountryDetails = styled.div`
@@ -66,6 +88,15 @@ const CountryDetails = styled.div`
     margin: 0;
     padding: 20px 0px;
   }
+
+  @media ${device.tablet} {
+    padding: 30px 0px;
+    width: 100%;
+
+    & h1 {
+      font-size: 1.5rem;
+    }
+  }
 `
 
 const BordersWrapper = styled.div`
@@ -75,6 +106,23 @@ const BordersWrapper = styled.div`
     padding: 3px 10px;
     margin: 3px 3px;
     ${buttonStyle}
+  }
+
+  @media ${device.tablet} {
+    display: flex;
+    flex-direction: column;
+    width : 100%;
+    flex-grow : wrap;
+    & div {
+      margin-top : 20px;
+      display : flex;
+      flex-wrap : wrap;
+      column-gap : 10px;
+      row-gap : 10px;
+    }
+    & button{
+      margin : 0px;
+    }
   }
 `
 
@@ -118,8 +166,9 @@ class Country extends Component {
   }
 
   render() {
-    const details = this.context.items.filter(
-      (item) => item.cca3 === this.context.currentCountry
+    const { items, currentCountry, setCurrentCountry,  } = this.context
+    const details = items.filter(
+      (item) => item.cca3 === currentCountry
     )
     const getLanguages = (object) => {
       const languagesArray = Object.values(object)
@@ -144,9 +193,6 @@ class Country extends Component {
       let borderName = countries.filter((country) => country.cca3 === border)
       return borderName[0].name.common
     }
-    console.log(this.state)
-    console.log(this.context)
-    console.log(details[0].borders)
     return (
       <ThemeProvider
         theme={this.state.theme === "light" ? lightTheme : darkTheme}
@@ -205,21 +251,23 @@ class Country extends Component {
                   </DetailsWrapper>
                   <BordersWrapper>
                     <strong>Border Countries: </strong>
-                    {details[0].borders &&
-                      details[0].borders.map((border) => (
-                        <Link
-                          key={border}
-                          to={`/country/${border}`}
-                          onClick={this.context.setCurrentCountry.bind(
-                            this,
-                            border
-                          )}
-                        >
-                          <button>
-                            {getBorders(this.context.items, border)}
-                          </button>
-                        </Link>
-                      ))}
+                    <div>
+                      {details[0].borders &&
+                        details[0].borders.map((border) => (
+                          <Link
+                            key={border}
+                            to={`/country/${border}`}
+                            onClick={setCurrentCountry.bind(
+                              this,
+                              border
+                            )}
+                          >
+                            <button>
+                              {getBorders(items, border)}
+                            </button>
+                          </Link>
+                        ))}
+                    </div>
                   </BordersWrapper>
                 </CountryDetails>
               </CountryWrapper>

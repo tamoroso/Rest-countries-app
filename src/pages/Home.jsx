@@ -7,6 +7,7 @@ import { ThemeProvider } from "styled-components"
 import { lightTheme, darkTheme } from "../utils/style/Themes"
 import { GlobalStyle } from "../utils/style/GlobalStyle"
 import { ApiContext } from "../context/ApiContext"
+import { device } from "../utils/style/device"
 
 const StyledHome = styled.div`
   min-height: 100vh;
@@ -17,8 +18,15 @@ const CountryCardsWrapper = styled.section`
   padding: 0px 80px;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
   column-gap: 80px;
   row-gap: 80px;
+  transition: flex ease-out 200ms;
+
+  @media ${device.tablet}{
+    row-gap : 40px;
+  }
 `
 
 export default class Home extends Component {
@@ -53,7 +61,6 @@ export default class Home extends Component {
   render() {
     const { filterItems, handleChange, handleClick, setCurrentCountry } =
       this.context
-    console.log(this.context)
     return (
       <ThemeProvider
         theme={this.state.theme === "light" ? lightTheme : darkTheme}
