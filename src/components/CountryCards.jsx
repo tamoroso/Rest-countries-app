@@ -1,7 +1,7 @@
 import { Component } from "react"
 import styled from "styled-components"
 import { navBarStyle, navBarShadow } from "../utils/style/atoms"
-import { beautyfiedNumber } from "../utils/functions/beautyfiedNumber"
+import { beautyfiedNumber } from "../utils/functions/helpers"
 import { Link } from "react-router-dom"
 
 const CardWrapper = styled.div`

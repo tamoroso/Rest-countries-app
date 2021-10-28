@@ -9,19 +9,13 @@ import Home from "./pages/Home"
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <Switch>
-        <ApiContextProvider>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route path="/country/:name">
-            <Country />
-          </Route>
-          <Route >
-            <NotFound />
-          </Route>
-        </ApiContextProvider>
-      </Switch>
+      <ApiContextProvider>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/country/:name" component={Country} />
+          <Route component={NotFound} />
+        </Switch>
+      </ApiContextProvider>
     </Router>
   </React.StrictMode>,
   document.getElementById("root")

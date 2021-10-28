@@ -6,7 +6,13 @@ import { ApiContext } from "../context/ApiContext"
 import styled, { ThemeProvider } from "styled-components"
 import { lightTheme, darkTheme } from "../utils/style/Themes"
 import { GlobalStyle } from "../utils/style/GlobalStyle"
-import { beautyfiedNumber } from "../utils/functions/beautyfiedNumber"
+import {
+  beautyfiedNumber,
+  getBorders,
+  getCurrencies,
+  getLanguages,
+  getNativeName,
+} from "../utils/functions/helpers"
 import { buttonStyle } from "../utils/style/atoms"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { library } from "@fortawesome/fontawesome-svg-core"
@@ -111,20 +117,21 @@ const BordersWrapper = styled.div`
   @media ${device.tablet} {
     display: flex;
     flex-direction: column;
-    width : 100%;
-    flex-grow : wrap;
+    width: 100%;
+    flex-grow: wrap;
     & div {
-      margin-top : 20px;
-      display : flex;
-      flex-wrap : wrap;
-      column-gap : 10px;
-      row-gap : 10px;
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 10px;
+      row-gap: 10px;
     }
-    & button{
-      margin : 0px;
+    & button {
+      margin: 0px;
     }
   }
 `
+
 
 class Country extends Component {
   constructor(props) {
@@ -166,33 +173,9 @@ class Country extends Component {
   }
 
   render() {
-    const { items, currentCountry, setCurrentCountry,  } = this.context
-    const details = items.filter(
-      (item) => item.cca3 === currentCountry
-    )
-    const getLanguages = (object) => {
-      const languagesArray = Object.values(object)
-      return languagesArray.join(", ")
-    }
-    function getNativeName(object) {
-      for (const [key, value] of Object.entries(object)) {
-        if (key !== "eng") {
-          for (const [key2, value2] of Object.entries(value))
-            if (key2 === "common") {
-              return value2
-            }
-        }
-      }
-    }
-    function getCurrencies(object) {
-      for (const value of Object.values(object)) {
-        return value.name
-      }
-    }
-    function getBorders(countries, border) {
-      let borderName = countries.filter((country) => country.cca3 === border)
-      return borderName[0].name.common
-    }
+    const { items, currentCountry, setCurrentCountry } = this.context
+    const details = items.filter((item) => item.cca3 === currentCountry)
+    const borders = details[0].borders
     return (
       <ThemeProvider
         theme={this.state.theme === "light" ? lightTheme : darkTheme}
@@ -252,21 +235,19 @@ class Country extends Component {
                   <BordersWrapper>
                     <strong>Border Countries: </strong>
                     <div>
-                      {details[0].borders &&
-                        details[0].borders.map((border) => (
+                      {borders ? (
+                        borders.map((border) => (
                           <Link
                             key={border}
                             to={`/country/${border}`}
-                            onClick={setCurrentCountry.bind(
-                              this,
-                              border
-                            )}
+                            onClick={setCurrentCountry.bind(this, border)}
                           >
-                            <button>
-                              {getBorders(items, border)}
-                            </button>
+                            <button>{getBorders(items, border)}</button>
                           </Link>
-                        ))}
+                        ))
+                      ) : (
+                        <span>No borders</span>
+                      )}
                     </div>
                   </BordersWrapper>
                 </CountryDetails>
